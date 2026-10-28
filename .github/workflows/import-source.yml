@@ -1,0 +1,38 @@
+name: Import verified Orbit source
+on:
+  push:
+    paths:
+      - '.github/workflows/import-source.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify and expand published source
+        shell: python
+        run: |
+          import hashlib, zipfile
+          from pathlib import Path
+          archive = Path('Orbit-Display-0.4.0-Source.zip')
+          assert hashlib.sha256(archive.read_bytes()).hexdigest() == '99857b7dd23d947ca2f991c620c409a662dd419cd3035e59694bd576902a5dc4'
+          with zipfile.ZipFile(archive) as z:
+              for member in z.infolist():
+                  path = Path(member.filename)
+                  assert path.parts[0] == 'Orbit-Display' and '..' not in path.parts
+                  relative = Path(*path.parts[1:])
+                  if not relative.parts or relative.parts[0] == '.github' or member.is_dir():
+                      continue
+                  assert relative.suffix not in ('.pem', '.key', '.jks', '.p12', '.pfx')
+                  relative.parent.mkdir(parents=True, exist_ok=True)
+                  relative.write_bytes(z.read(member))
+      - name: Commit project files
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add .
+          git diff --cached --quiet && exit 0
+          git commit -m 'Publish Orbit Display 0.4.0 source, documentation and tests'
+          git push

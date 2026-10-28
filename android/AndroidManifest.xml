@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="ua.orbit.display" android:versionCode="4" android:versionName="0.4.0">
+    <uses-sdk android:minSdkVersion="26" android:targetSdkVersion="35" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+    <application android:label="Orbit Display" android:theme="@style/OrbitTheme" android:icon="@drawable/ic_orbit" android:allowBackup="false" android:usesCleartextTraffic="false" android:supportsRtl="true">
+        <provider android:name=".UpdateProvider" android:authorities="ua.orbit.display.updates" android:exported="false" android:grantUriPermissions="true" />
+        <activity android:name=".MainActivity" android:exported="true" android:configChanges="orientation|screenSize|keyboardHidden" android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>

@@ -1,0 +1,11 @@
+build/
+dist/
+__pycache__/
+.pytest_cache/
+*.pyc
+*.jks
+*.key
+*.pem
+*.p12
+*.pfx
+orbit.log
